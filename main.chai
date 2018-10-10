@@ -7,22 +7,22 @@ def conf(t) {
 }
 
 def load() {
-    // Menu
-    global games = []
+	// Menu
+	global games = []
 	var data = love.filesystem.read("menu.json")
 	for (item : from_json(data)) {
 		games.push_back(Game(to_string(item.first), to_string(item.second)))
 	}
-    games.push_back(Game("Quit", "quit"))
+	games.push_back(Game("Quit", "quit"))
 
-    // Menu Functionality
-    global bgMoveLeft = true
-    global bgPosition = 0.0f
-    global currentSelection = 0
-    global lineHeight = 50
+	// Menu Functionality
+	global bgMoveLeft = true
+	global bgPosition = 0.0f
+	global currentSelection = 0
+	global lineHeight = 50
 
 	// Font
-    global fontSize = 40
+	global fontSize = 40
 	global font = love.graphics.newFont("Resources/Font/Font.ttf", fontSize)
 	love.graphics.setFont(font)
 
@@ -31,7 +31,7 @@ def load() {
 	global bg = love.graphics.newImage("Resources/Background/Background.png")
 
 	// Sounds
-    global soundBackgroundVolume = 0.3f
+	global soundBackgroundVolume = 0.3f
 	global soundBackground = love.audio.newSource("Resources/Music/Music.ogg")
 	soundBackground.setVolume(soundBackgroundVolume)
 	soundBackground.setLooping(true)
@@ -51,7 +51,7 @@ def draw() {
 
 	// Display each game.
 	var y = lineHeight * 2
-    var i = 0
+	var i = 0
 	for (game : games) {
 		// Black text and selector.
 		love.graphics.setColor(0, 0, 0)
@@ -64,7 +64,7 @@ def draw() {
 		// Display the menu item
 		love.graphics.print(game.title, logo.getWidth() + lineHeight * 2.8f, y)
 		y = y + lineHeight
-        i = i + 1
+		i = i + 1
 	}
 }
 
@@ -122,10 +122,10 @@ def update(dt) {
  * A menu list item.
  */
 class Game {
-    def Game(title, executable) {
-        this.title = title
-        this.executable = executable
-    }
+	def Game(title, executable) {
+		this.title = title
+		this.executable = executable
+	}
 }
 
 /**
@@ -134,8 +134,8 @@ class Game {
 def launchGame(game) {
 	if (game.title == "Quit") {
 		love.event.quit()
-    } else {
-        love.window.showMessageBox("Launching " + game.title, 300)
-        love.system.execute(game.executable)
+	} else {
+		love.window.showMessageBox("Launching " + game.title, 300)
+		love.system.execute(game.executable)
 	}
 }
