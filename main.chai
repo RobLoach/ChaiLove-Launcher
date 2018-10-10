@@ -1,0 +1,134 @@
+def conf(t) {
+	t.window.title = "Launcher"
+	t.version = "0.28.0"
+	t.identity = "launcher"
+	t.window.width = 960
+	t.window.height = 720
+}
+
+def load() {
+    // Menu
+    global bgMoveLeft = true
+    global bgPosition = 0.0f
+    global currentSelection = 0
+    global lineHeight = 50
+    global games = []
+	var data = love.filesystem.read("menu.json")
+	for (item : from_json(data)) {
+		games.push_back(Game(to_string(item.first), to_string(item.second)))
+	}
+    games.push_back(Game("Quit", "quit"))
+
+	// Font
+    global fontSize = 40
+	global font = love.graphics.newFont("Resources/Font/Font.ttf", fontSize)
+	love.graphics.setFont(font)
+
+	// Background
+	love.graphics.setBackgroundColor(255, 255, 255)
+	global bg = love.graphics.newImage("Resources/Background/Background.png")
+
+	// Sounds
+    global soundBackgroundVolume = 0.3f
+	global soundBackground = love.audio.newSource("Resources/Music/Music.ogg")
+	soundBackground.setVolume(soundBackgroundVolume)
+	soundBackground.setLooping(true)
+	global soundFocus = love.audio.newSource("Resources/Sound/Focus.wav")
+	global soundSelect = love.audio.newSource("Resources/Sound/Select.wav")
+	love.audio.play(soundBackground)
+
+	// Logo
+	global logo = love.graphics.newImage("Resources/Logo/Logo.png")
+}
+
+def draw() {
+	love.graphics.clear()
+	love.graphics.draw(bg, bgPosition, 0)
+	love.graphics.draw(logo, lineHeight, lineHeight)
+
+	// Show each game.
+	var y = lineHeight * 2
+    var i = 0
+	for (game : games) {
+		// Display everything in black.
+		love.graphics.setColor(0, 0, 0)
+
+		// Display the menu cursor if needed
+		if (currentSelection == i) {
+			love.graphics.rectangle("fill", logo.getWidth() + lineHeight * 2, y + lineHeight / 4, lineHeight / 3, lineHeight / 3)
+		}
+
+		// Display the menu item
+		love.graphics.print(game.title, logo.getWidth() + lineHeight * 2.8f, y)
+		y = y + lineHeight
+        i = i + 1
+	}
+}
+
+def joystickpressed(joystick, button) {
+	switch (button) {
+		case ("down") {
+			currentSelection = currentSelection + 1
+			if (currentSelection >= games.size()) {
+				currentSelection = games.size() - 1
+			}
+			love.audio.play(soundFocus)
+			soundBackground.setVolume(soundBackgroundVolume)
+			break
+		}
+		case ("up") {
+			currentSelection = currentSelection - 1
+			if (currentSelection < 0) {
+				currentSelection = 0
+			}
+			love.audio.play(soundFocus)
+			soundBackground.setVolume(soundBackgroundVolume)
+			break
+		}
+		case ("start") {
+			// Fallthrough
+		}
+		case ("a") {
+			love.audio.play(soundSelect)
+			soundBackground.setVolume(0.0f)
+			launchGame(games[currentSelection])
+			break
+		}
+	}
+}
+
+/**
+ * A menu list item.
+ */
+class Game {
+    def Game(title, executable) {
+        this.title = title
+        this.executable = executable
+    }
+}
+
+def launchGame(game) {
+	if (game.title == "Quit") {
+		love.event.quit()
+    } else {
+        love.window.showMessageBox("Launching " + game.title, 300)
+        love.system.execute(game.executable)
+	}
+}
+
+def update(dt) {
+	// Animate the background.
+	if (bgMoveLeft) {
+		bgPosition = bgPosition - dt * 40.0f
+	}
+	else {
+		bgPosition = bgPosition + dt * 40.0f
+	}
+
+	// Make sure the background doesn't leave the background area.
+	if (bgPosition + bg.getWidth() <= love.graphics.getWidth()) {
+		bgMoveLeft = false
+	} else if (bgPosition >= 0.0f) {
+		bgMoveLeft = true
+	}
+}
