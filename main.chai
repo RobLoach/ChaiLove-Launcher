@@ -8,16 +8,18 @@ def conf(t) {
 
 def load() {
     // Menu
-    global bgMoveLeft = true
-    global bgPosition = 0.0f
-    global currentSelection = 0
-    global lineHeight = 50
     global games = []
 	var data = love.filesystem.read("menu.json")
 	for (item : from_json(data)) {
 		games.push_back(Game(to_string(item.first), to_string(item.second)))
 	}
     games.push_back(Game("Quit", "quit"))
+
+    // Menu Functionality
+    global bgMoveLeft = true
+    global bgPosition = 0.0f
+    global currentSelection = 0
+    global lineHeight = 50
 
 	// Font
     global fontSize = 40
@@ -42,18 +44,19 @@ def load() {
 }
 
 def draw() {
+	// Draw the background elements.
 	love.graphics.clear()
 	love.graphics.draw(bg, bgPosition, 0)
 	love.graphics.draw(logo, lineHeight, lineHeight)
 
-	// Show each game.
+	// Display each game.
 	var y = lineHeight * 2
     var i = 0
 	for (game : games) {
-		// Display everything in black.
+		// Black text and selector.
 		love.graphics.setColor(0, 0, 0)
 
-		// Display the menu cursor if needed
+		// Display the menu cursor.
 		if (currentSelection == i) {
 			love.graphics.rectangle("fill", logo.getWidth() + lineHeight * 2, y + lineHeight / 4, lineHeight / 3, lineHeight / 3)
 		}
@@ -97,25 +100,6 @@ def joystickpressed(joystick, button) {
 	}
 }
 
-/**
- * A menu list item.
- */
-class Game {
-    def Game(title, executable) {
-        this.title = title
-        this.executable = executable
-    }
-}
-
-def launchGame(game) {
-	if (game.title == "Quit") {
-		love.event.quit()
-    } else {
-        love.window.showMessageBox("Launching " + game.title, 300)
-        love.system.execute(game.executable)
-	}
-}
-
 def update(dt) {
 	// Animate the background.
 	if (bgMoveLeft) {
@@ -130,5 +114,28 @@ def update(dt) {
 		bgMoveLeft = false
 	} else if (bgPosition >= 0.0f) {
 		bgMoveLeft = true
+	}
+}
+
+
+/**
+ * A menu list item.
+ */
+class Game {
+    def Game(title, executable) {
+        this.title = title
+        this.executable = executable
+    }
+}
+
+/**
+ * Launches the given game object.
+ */
+def launchGame(game) {
+	if (game.title == "Quit") {
+		love.event.quit()
+    } else {
+        love.window.showMessageBox("Launching " + game.title, 300)
+        love.system.execute(game.executable)
 	}
 }
