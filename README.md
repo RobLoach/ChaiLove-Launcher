@@ -15,13 +15,21 @@ ChaiLove Launcher can be run through [RetroArch](https://retroarch.com/) and [Ch
 3. Download the [ChaiLove Launcher](http://github.com/RobLoach/ChaiLove-Launcher)
 	```
 	git clone https://github.com/RobLoach/ChaiLove-Launcher.git
+	cd ChaiLove-Launcher
 	```
 
-4. Edit [menu.json](menu.json) with the games you would like to have in the menu.
+4. Create a [chailove-launcher.json](chailove-launcher.sample.json) in either the launcher's directory, the system/BIOS folder, or your save directory, with the games you would like to have in the menu. The following is an example *chailove-launcher.json* file:
+	```
+	{
+		"Steam (Windows)": "C:\\Program Files\\Steam\\Steam.exe",
+		"Steam (Linux)": "steam"
+	}
+	```
+
 
 5. Launch ChaiLove-Launcher's `main.chai` through RetroArch:
 	```
-	retroarch -L chailove_libretro.so ChaiLove-Launcher/main.chai
+	retroarch -L chailove_libretro.so main.chai
 	```
 
 ## Attribution

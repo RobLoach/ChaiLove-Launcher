@@ -6,14 +6,28 @@ def conf(t) {
 	t.window.height = 720
 }
 
+def loadFile(file) {
+	var data = love.filesystem.read(file)
+	if (data != "") {
+		for (item : from_json(data)) {
+			games.push_back(Game(to_string(item.first), to_string(item.second)))
+		}
+	}
+}
+
 def load() {
 	// Menu
 	global games = []
-	var data = love.filesystem.read("menu.json")
-	for (item : from_json(data)) {
-		games.push_back(Game(to_string(item.first), to_string(item.second)))
+	loadFile("chailove-launcher.json")
+	loadFile("libretro/saves/chailove-launcher.json")
+	loadFile("libretro/system/chailove-launcher.json")
+	if (games.size() == 0) {
+		games.push_back(Game("Missing chailove-launcher.json", "quit"))
+		love.window.showMessageBox("Create a chailove-launcher.json file. See documentation for more information.")
 	}
-	games.push_back(Game("Quit", "quit"))
+	else {
+		games.push_back(Game("Quit", "quit"))
+	}
 
 	// Menu Functionality
 	global bgMoveLeft = true
@@ -132,7 +146,7 @@ class Game {
  * Launches the given game object.
  */
 def launchGame(game) {
-	if (game.title == "Quit") {
+	if (game.executable == "quit") {
 		love.event.quit()
 	} else {
 		love.window.showMessageBox("Launching " + game.title, 300)
