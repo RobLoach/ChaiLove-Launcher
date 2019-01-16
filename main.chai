@@ -1,4 +1,6 @@
 def conf(t) {
+    global width = 960
+    global height = 720
 	t.window.title = "Launcher"
 	t.version = "0.28.0"
 	t.identity = "launcher"
@@ -60,7 +62,8 @@ def load() {
 def draw() {
 	// Draw the background elements.
 	love.graphics.clear()
-	love.graphics.draw(bg, bgPosition, 0)
+    var quad := love.graphics.newQuad(-bgPosition, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0, 0)
+	love.graphics.draw(bg, quad)
 	love.graphics.draw(logo, lineHeight, lineHeight)
 
 	// Display each game.
