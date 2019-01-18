@@ -32,6 +32,14 @@ ChaiLove Launcher can be run through [RetroArch](https://retroarch.com/) and [Ch
 	retroarch -L chailove_libretro.so main.chai
 	```
 
+## Controls
+
+- Up: Move selection up
+- Down: Move selection down
+- A: Launch game
+- Start: Launch game
+- B: Mute background music
+
 ## Attribution
 
 - [Rob Loach](https://robloach.net)

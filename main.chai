@@ -51,12 +51,16 @@ def load() {
 	global soundBackground = love.audio.newSource("Resources/Music/Music.ogg")
 	soundBackground.setVolume(soundBackgroundVolume)
 	soundBackground.setLooping(true)
+	global mute = false
 	global soundFocus = love.audio.newSource("Resources/Sound/Focus.wav")
 	global soundSelect = love.audio.newSource("Resources/Sound/Select.wav")
 	love.audio.play(soundBackground)
 
 	// Logo
 	global logo = love.graphics.newImage("Resources/Logo/Logo.png")
+
+	// Mute
+	global muteImage = love.graphics.newImage("Resources/Mute.png")
 }
 
 def draw() {
@@ -65,6 +69,10 @@ def draw() {
     var quad := love.graphics.newQuad(-bgPosition, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0, 0)
 	love.graphics.draw(bg, quad)
 	love.graphics.draw(logo, lineHeight, lineHeight)
+
+	if (mute) {
+		love.graphics.draw(muteImage, love.graphics.getWidth() - muteImage.getWidth(), 0);
+	}
 
 	// Display each game.
 	var y = lineHeight * 2
@@ -93,7 +101,9 @@ def joystickpressed(joystick, button) {
 				currentSelection = games.size() - 1
 			}
 			love.audio.play(soundFocus)
-			soundBackground.setVolume(soundBackgroundVolume)
+			if (!mute) {
+				soundBackground.setVolume(soundBackgroundVolume)
+			}
 			break
 		}
 		case ("up") {
@@ -102,7 +112,9 @@ def joystickpressed(joystick, button) {
 				currentSelection = 0
 			}
 			love.audio.play(soundFocus)
-			soundBackground.setVolume(soundBackgroundVolume)
+			if (!mute) {
+				soundBackground.setVolume(soundBackgroundVolume)
+			}
 			break
 		}
 		case ("start") {
@@ -112,6 +124,16 @@ def joystickpressed(joystick, button) {
 			love.audio.play(soundSelect)
 			soundBackground.setVolume(0.0f)
 			launchGame(games[currentSelection])
+			break
+		}
+		case ("b") {
+			mute = !mute
+			if (mute) {
+				soundBackground.setVolume(0.0f)
+			}
+			else {
+				soundBackground.setVolume(soundBackgroundVolume)
+			}
 			break
 		}
 	}
