@@ -66,12 +66,19 @@ def load() {
 def draw() {
 	// Draw the background elements.
 	love.graphics.clear()
-    var quad := love.graphics.newQuad(-bgPosition, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0, 0)
-	love.graphics.draw(bg, quad)
+
+	// Background
+	if (love.config.options["highquality"]) {
+		var quad := love.graphics.newQuad(-bgPosition, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0, 0)
+		love.graphics.draw(bg, quad)
+	}
+
+	// Logo
 	love.graphics.draw(logo, lineHeight, lineHeight)
 
+	// Mute button
 	if (mute) {
-		love.graphics.draw(muteImage, love.graphics.getWidth() - muteImage.getWidth(), 0);
+		love.graphics.draw(muteImage, love.graphics.getWidth() - muteImage.getWidth() - lineHeight / 2.0f, lineHeight / 2.0f);
 	}
 
 	// Display each game.
