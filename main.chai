@@ -1,12 +1,4 @@
-def conf(t) {
-    global width = 960
-    global height = 720
-	t.window.title = "Launcher"
-	t.version = "0.28.0"
-	t.identity = "launcher"
-	t.window.width = 960
-	t.window.height = 720
-}
+
 
 def loadFile(file) {
 	var data = love.filesystem.read(file)
@@ -100,9 +92,9 @@ def draw() {
 	}
 }
 
-def joystickpressed(joystick, button) {
+def gamepadpressed(joystick, button) {
 	switch (button) {
-		case ("down") {
+		case ("dpdown") {
 			currentSelection = currentSelection + 1
 			if (currentSelection >= games.size()) {
 				currentSelection = games.size() - 1
@@ -113,7 +105,7 @@ def joystickpressed(joystick, button) {
 			}
 			break
 		}
-		case ("up") {
+		case ("dpup") {
 			currentSelection = currentSelection - 1
 			if (currentSelection < 0) {
 				currentSelection = 0

@@ -1,0 +1,7 @@
+def conf(t) {
+	t.window.title = "Launcher"
+	t.version = "0.28.0"
+	t.identity = "launcher"
+	t.window.width = 960
+	t.window.height = 720
+}
